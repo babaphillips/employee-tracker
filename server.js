@@ -15,7 +15,7 @@ const db = mysql.createConnection(
     password: "avP5864919498",
     database: "theoffice",
   },
-  console.log("Connected to the election database.")
+  console.log("Connected to theoffice database.")
 );
 
 // Default response for any other request (Not Found)

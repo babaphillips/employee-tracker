@@ -1,9 +1,9 @@
 // npm packages
-const inquirer = require("inquirer");
-const figlet = require("figlet");
+import text from "figlet";
+import inquirer from "inquirer";
 
 const init = () => {
-  figlet.text(
+  text(
     "Employee Tracker!",
     {
       font: "Doom",
@@ -21,23 +21,63 @@ const init = () => {
       console.log(data);
     }
   );
-  return inquirer.createPromptModule([
-    {
-      type: "list",
-      name: "first-step",
-      messages: "What would you like to do?",
-      choices: [
-        "View All Departments",
-        "View All Roles",
-        "View All Employees",
-        "Add A Department",
-        "Add A Role",
-        "Add An Employee",
-        "Update An Employee Role",
-      ],
-    },
-  ]);
+
+  const firstStep = () => {
+    return inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "first",
+          messages: "What would you like to do?",
+          choices: [
+            "View All Departments",
+            "View All Roles",
+            "View All Employees",
+            "Add A Department",
+            "Add A Role",
+            "Add An Employee",
+            "Update An Employee Role",
+          ],
+        },
+      ])
+      .then((selected) => {
+        switch (selected.first) {
+          // if view all dept is selected, allDepartments function will run
+          case "View All Departments":
+            allDepartments();
+            break;
+          // if view all roles is selected, allRoles function will run
+          case "View All Roles":
+            allRoles();
+            break;
+          case "View All Employees":
+            allEmployees();
+            break;
+          case "Add A Department":
+            addDepartment();
+            break;
+          case "Add A Role":
+            addRole();
+            break;
+          case "Add An Employee":
+            addEmployee();
+            break;
+          case "View All Roles":
+            allRoles();
+            break;
+          case "Update An Employee Role":
+            updateEmployeeRole();
+            break;
+          // if none of the answers are selected, allDepartments function will run
+          default:
+            allDepartments();
+        }
+      });
+  };
 };
+
+// Create a function to initialize app
+init();
 // function that starts the application
 // presents the following options :
 // view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
