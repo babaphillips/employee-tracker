@@ -1,3 +1,43 @@
+// npm packages
+const inquirer = require("inquirer");
+const figlet = require("figlet");
+
+const init = () => {
+  figlet.text(
+    "Employee Tracker!",
+    {
+      font: "Doom",
+      horizontalLayout: "default",
+      verticalLayout: "default",
+      width: 80,
+      whitespaceBreak: true,
+    },
+    function (err, data) {
+      if (err) {
+        console.log("Something went wrong...");
+        console.dir(err);
+        return;
+      }
+      console.log(data);
+    }
+  );
+  return inquirer.createPromptModule([
+    {
+      type: "list",
+      name: "first-step",
+      messages: "What would you like to do?",
+      choices: [
+        "View All Departments",
+        "View All Roles",
+        "View All Employees",
+        "Add A Department",
+        "Add A Role",
+        "Add An Employee",
+        "Update An Employee Role",
+      ],
+    },
+  ]);
+};
 // function that starts the application
 // presents the following options :
 // view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
