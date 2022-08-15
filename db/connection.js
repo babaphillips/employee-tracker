@@ -13,9 +13,4 @@ const db = createConnection(
   console.log("Connected to the The Office database.")
 );
 
-// db.connect(function (err) {
-//   if (err) throw err;
-//   console.log("Database connected!");
-// });
-
 export default db;

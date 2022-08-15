@@ -1,4 +1,4 @@
-// npm packages
+// import npm packages
 import text from "figlet";
 import inquirer from "inquirer";
 import db from "./db/connection.js";
@@ -26,7 +26,6 @@ const init = () => {
   );
 
   // initial prompt for following options : view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-
   const firstStep = () => {
     return inquirer
       .prompt([
@@ -42,6 +41,7 @@ const init = () => {
             "Add A Role",
             "Add An Employee",
             "Update An Employee Role",
+            "Exit",
           ],
         },
       ])
@@ -73,9 +73,9 @@ const init = () => {
           case "Update An Employee Role":
             updateEmployeeRole();
             break;
-          // if none of the answers are selected, allDepartments function will run
+          // if none of the answers are selected, exit function will run
           default:
-            allDepartments();
+            exit();
         }
       });
   };
@@ -86,17 +86,35 @@ init();
 
 // view all departments function : THEN I am presented with a formatted table showing department names and department id
 function allDepartments() {
-  const sql = `SELECT * FROM department`;
+  const sql = `SELECT id AS ID, dept_name AS Department_Name FROM department`;
   db.query(sql, (err, rows) => {
     if (err) throw err;
     console.table(rows);
   });
-  // firstStep();
+  // .then() => firstStep();
 }
 
 // view all roles function : THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
 
+function allRoles() {
+  const sql = `SELECT * FROM roles`;
+  db.query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    // firstStep();
+  });
+}
+
 // view all employees function :THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+
+function allEmployees() {
+  const sql = `SELECT * FROM employee`;
+  db.query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    // firstStep();
+  });
+}
 
 // add department :THEN I am prompted to enter the name of the department and that department is added to the database
 
