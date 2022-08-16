@@ -4,6 +4,7 @@ import inquirer from "inquirer";
 import db from "./db/connection.js";
 // // import cTable from "console.table";
 
+// function that initiates my employee tracker title and runs firstStep function after it
 function init() {
   text(
     "Employee Tracker!",
@@ -21,15 +22,17 @@ function init() {
         return;
       }
       console.log(data);
+      // will start first prompts necessary as asked in the acceptance criteria
       firstStep();
     }
   );
 
-  // initial prompt for following options : view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+  // initial prompt for following options :
   function firstStep() {
     return inquirer
       .prompt([
         {
+          //view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
           type: "list",
           name: "first",
           message: "What would you like to do?",
@@ -186,12 +189,12 @@ function addRole() {
         {
           type: "input",
           name: "dept",
-          message: "What is the name of the department? (Required)",
+          message: "What is the ID of the department? (Required)",
           validate: (deptInput) => {
             if (deptInput) {
               return true;
             } else {
-              console.log("Please enter the name of the department");
+              console.log("Please enter the ID of the department");
               return false;
             }
           },
@@ -201,8 +204,12 @@ function addRole() {
       .then((answer) => {
         // not using the const sql here - trying a different method
         db.query(
-          "INSERT INTO role SET ?",
-          { title: answer.title, salary: answer.salary },
+          "INSERT INTO roles SET ?",
+          {
+            title: answer.title,
+            salary: answer.salary,
+            department_id: answer.dept,
+          },
           (err) => {
             if (err) throw err;
             console.log("New role was added into The Office Database");
