@@ -116,36 +116,101 @@ function allEmployees() {
   });
 }
 
-// add department :THEN I am prompted to enter the name of the department and that department is added to the database
-
+// add department function
 function addDepartment() {
-  return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "What is the name of the department? (Required)",
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter the name of the department");
-            return false;
-          }
+  return (
+    inquirer
+      //THEN I am prompted to enter the name of the department
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "What is the name of the department? (Required)",
+          validate: (nameInput) => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log("Please enter the name of the department");
+              return false;
+            }
+          },
         },
-      },
-    ])
-    .then((answer) => {
-      db.query(
-        "INSERT INTO department SET ?",
-        { dept_name: answer.name },
-        (err) => {
-          if (err) throw err;
-        }
-      );
-    });
+      ])
+      // and that department is added to the database
+      .then((answer) => {
+        // not using the const sql here - trying a different method
+        db.query(
+          "INSERT INTO department SET ?",
+          { dept_name: answer.name },
+          (err) => {
+            if (err) throw err;
+            console.log("New department was added into The Office Database");
+          }
+        );
+      })
+  );
 }
-// add a role :THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+
+// add a role function
+function addRole() {
+  return (
+    inquirer
+      //THEN I am prompted to enter the name, salary, and department for the role and
+      .prompt([
+        {
+          type: "input",
+          name: "title",
+          message: "What is the title of this role? (Required)",
+          validate: (titleInput) => {
+            if (titleInput) {
+              return true;
+            } else {
+              console.log("Please enter the title of this role");
+              return false;
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "What is the salary of this role? (Required)",
+          validate: (salaryInput) => {
+            if (salaryInput) {
+              return true;
+            } else {
+              console.log("Please enter the salary of this role");
+              return false;
+            }
+          },
+        },
+        {
+          type: "input",
+          name: "dept",
+          message: "What is the name of the department? (Required)",
+          validate: (deptInput) => {
+            if (deptInput) {
+              return true;
+            } else {
+              console.log("Please enter the name of the department");
+              return false;
+            }
+          },
+        },
+      ])
+      // and that role is added to the database
+      .then((answer) => {
+        // not using the const sql here - trying a different method
+        db.query(
+          "INSERT INTO role SET ?",
+          { title: answer.title, salary: answer.salary },
+          (err) => {
+            if (err) throw err;
+            console.log("New role was added into The Office Database");
+          }
+        );
+      })
+  );
+}
 
 // add an employee : THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 
