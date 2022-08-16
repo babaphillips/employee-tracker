@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 import db from "./db/connection.js";
 // // import cTable from "console.table";
 
-const init = () => {
+function init() {
   text(
     "Employee Tracker!",
     {
@@ -26,7 +26,7 @@ const init = () => {
   );
 
   // initial prompt for following options : view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-  const firstStep = () => {
+  function firstStep() {
     return inquirer
       .prompt([
         {
@@ -78,8 +78,8 @@ const init = () => {
             exit();
         }
       });
-  };
-};
+  }
+}
 
 // Create a function to initialize app
 init();
@@ -91,7 +91,7 @@ function allDepartments() {
     if (err) throw err;
     console.table(rows);
   });
-  // .then() => firstStep();
+  // init();
 }
 
 // view all roles function : THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
@@ -118,6 +118,33 @@ function allEmployees() {
 
 // add department :THEN I am prompted to enter the name of the department and that department is added to the database
 
+function addDepartment() {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is the name of the department? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter the name of the department");
+            return false;
+          }
+        },
+      },
+    ])
+    .then((answer) => {
+      db.query(
+        "INSERT INTO department SET ?",
+        { dept_name: answer.name },
+        (err) => {
+          if (err) throw err;
+        }
+      );
+    });
+}
 // add a role :THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
 
 // add an employee : THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
