@@ -1,9 +1,9 @@
 /* Insert values into department table */
-INSERT INTO department (dept_name)
+INSERT INTO department (name)
 VALUES ("Management"), ('Sales'), ('Accounting'), ('Human Resources'), ('Reception'), ('Warehouse');
 
 /* Insert values into roles table */
-INSERT INTO roles (title, salary, department_id)
+INSERT INTO role (title, salary, department_id)
 VALUES ("Warehouse Foreman", 62000, 6), ("Accountant", 50960, 3), ("Head Accountant", 57600, 3), ("Salesman", 55000, 2), ("Recepcionist", 41500, 5), ("Assistant Regional Manager", 62000, 1), ("Regional Manager", 80000, 1), ("Human Resources", 50000, 4);
 
 /* Insert values into employee table */

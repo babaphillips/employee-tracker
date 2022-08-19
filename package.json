@@ -1,18 +1,17 @@
 {
   "dependencies": {
+    "console.table": "^0.10.0",
     "figlet": "^1.5.2",
-    "inquirer": "^9.1.0",
+    "inquirer": "8.2.4",
     "mysql2": "^2.3.3"
   },
   "scripts": {
     "start": "node server.js"
   },
   "name": "employee-tracker",
-  "type": "module",
   "description": "",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/babaphillips/employee-tracker.git"
