@@ -260,39 +260,39 @@ function addEmployee() {
 function updateEmployeeRole() {
   db.findEmployees().then(([table]) => {
     let employee = table;
-    const employeeList = employee.map(
-      ({ first_name, last_name, title, id }) => ({
-        name: `${first_name} ${last_name} - ${title}`,
-        value: id,
-      })
-    );
+    const employeeList = employee.map(({ first_name, last_name, id }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id,
+    }));
+
     db.findRoles().then(([table]) => {
       let role = table;
       const roleList = role.map(({ id, title }) => ({
-        name: `${title}`,
+        name: title,
         value: id,
       }));
-      return (
-        inquirer
-          //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-          .prompt([
-            {
-              type: "list",
-              name: "id",
-              message: "Which employee do you want to update?",
-              choices: employeeList,
-            },
-            {
-              type: "list",
-              name: "role_id",
-              message: "Which role does this employee belong to?",
-              choices: roleList,
-            },
-          ])
-          .then((answer) => {
-            db.updateEmployeeRole(answer).then(() => firstStep());
-          })
-      );
+
+      inquirer
+        //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+        .prompt([
+          {
+            type: "list",
+            name: "empId",
+            message: "Which employee do you want to update?",
+            choices: employeeList,
+          },
+          {
+            type: "list",
+            name: "role_id",
+            message: "Which role does this employee belong to?",
+            choices: roleList,
+          },
+        ])
+        .then((answer) => {
+          const role_id = answer.role_id;
+          const empId = answer.empId;
+          db.updateEmployeeRole(empId, role_id).then(() => firstStep());
+        });
     });
   });
 }

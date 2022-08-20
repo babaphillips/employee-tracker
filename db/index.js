@@ -39,13 +39,13 @@ class DB {
     return this.db.promise().query("INSERT INTO employee SET ?", employee);
   }
 
-  updateEmployeeRole(updatedEmployee) {
+  updateEmployeeRole(employeeId, roleId) {
     return this.db
       .promise()
-      .query(
-        "UPDATE employee SET role_id = ${role_id} WHERE id = ${employee}",
-        updatedEmployee
-      );
+      .query("UPDATE employee SET role_id = ? WHERE id = ?", [
+        roleId,
+        employeeId,
+      ]);
   }
 }
 
