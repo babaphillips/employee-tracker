@@ -1,6 +1,7 @@
 // import npm packages
 const figlet = require("figlet");
 const inquirer = require("inquirer");
+const { findDepts } = require("./db");
 require("console.table");
 
 const db = require("./db");
@@ -140,155 +141,121 @@ function addDepartment() {
 
 // add a role function
 function addRole() {
-  return (
-    inquirer
-      //THEN I am prompted to enter the name, salary, and department for the role and
-      .prompt([
-        {
-          type: "input",
-          name: "title",
-          message: "What is the title of this role? (Required)",
-          validate: (titleInput) => {
-            if (titleInput) {
-              return true;
-            } else {
-              console.log("Please enter the title of this role");
-              return false;
-            }
-          },
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "What is the salary of this role? (Required)",
-          validate: (salaryInput) => {
-            if (salaryInput) {
-              return true;
-            } else {
-              console.log("Please enter the salary of this role");
-              return false;
-            }
-          },
-        },
-        {
-          type: "list",
-          name: "dept",
-          message: "Which department does the role belong to?",
-          choices: [
-            "1",
-            "Sales",
-            "Accounting",
-            "Human Resources",
-            "Reception",
-            "Warehouse",
-          ],
-          validate: (deptInput) => {
-            if (deptInput) {
-              return true;
-            } else {
-              console.log("Please enter the department");
-              return false;
-            }
-          },
-        },
-      ])
-      // and that role is added to the database
-      .then((answer) => {
-        // not using the const sql here - trying a different method
-        db.query(
-          "INSERT INTO roles SET ?",
+  db.findDepts().then(([table]) => {
+    let department = table;
+    const deptList = department.map(({ id, name }) => ({
+      name: `${name}`,
+      value: id,
+    }));
+    return (
+      inquirer
+        //THEN I am prompted to enter the name, salary, and department for the role and
+        .prompt([
           {
-            title: answer.title,
-            salary: answer.salary,
-            department_id: answer.dept,
+            type: "input",
+            name: "title",
+            message: "What is the title of this role? (Required)",
+            validate: (titleInput) => {
+              if (titleInput) {
+                return true;
+              } else {
+                console.log("Please enter the title of this role");
+                return false;
+              }
+            },
           },
-          (err) => {
-            if (err) throw err;
-            console.log("New role was added into The Office Database");
-          }
-        );
-      })
-  );
+          {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of this role? (Required)",
+            validate: (salaryInput) => {
+              if (salaryInput) {
+                return true;
+              } else {
+                console.log("Please enter the salary of this role");
+                return false;
+              }
+            },
+          },
+          {
+            type: "list",
+            name: "dept",
+            message: "Which department does the role belong to?",
+            choices: deptList,
+          },
+        ])
+        .then((answer) => {
+          db.createRole(answer).then(() => firstStep());
+        })
+    );
+  });
 }
 
 // add a employee function
 function addEmployee() {
-  return (
-    inquirer
-      //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-      .prompt([
-        {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of this employee? (Required)",
-          validate: (first_nameInput) => {
-            if (first_nameInput) {
-              return true;
-            } else {
-              console.log("Please enter the first name of this employee");
-              return false;
-            }
-          },
-        },
-        {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of this employee? (Required)",
-          validate: (last_nameInput) => {
-            if (last_nameInput) {
-              return true;
-            } else {
-              console.log("Please enter the last name of this employee");
-              return false;
-            }
-          },
-        },
-        {
-          type: "input",
-          name: "role",
-          message: "What is the role of the employee? (Required)",
-          validate: (roleInput) => {
-            if (roleInput) {
-              return true;
-            } else {
-              console.log("Please enter the role of the employee");
-              return false;
-            }
-          },
-        },
-        {
-          type: "input",
-          name: "manager",
-          message: "What is the manager ID for the employee? (Required)",
-          validate: (managerInput) => {
-            if (managerInput) {
-              return true;
-            } else {
-              console.log("Please enter the role of the employee");
-              return false;
-            }
-          },
-        },
-      ])
-      // and that role is added to the database
-      .then((answer) => {
-        // not using the const sql here - trying a different method
-        db.query(
-          "INSERT INTO employee SET ?",
-          {
-            first_name: answer.first_name,
-            last_name: answer.last_name,
-            role_id: answer.role,
-            manager_id: answer.manager,
-          },
-          (err) => {
-            if (err) throw err;
-            console.log("New role was added into The Office Database");
-          }
-        );
-      })
-  );
+  db.findRoles().then(([table]) => {
+    let role = table;
+    const roleList = role.map(({ id, title }) => ({
+      name: `${title}`,
+      value: id,
+    }));
+    db.findEmployees().then(([table]) => {
+      let employee = table;
+      const employeeList = employee.map(({ first_name, last_name, id }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id,
+      }));
+      return (
+        inquirer
+          //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+          .prompt([
+            {
+              type: "input",
+              name: "first_name",
+              message: "What is the first name of this employee? (Required)",
+              validate: (first_nameInput) => {
+                if (first_nameInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the first name of this employee");
+                  return false;
+                }
+              },
+            },
+            {
+              type: "input",
+              name: "last_name",
+              message: "What is the last name of this employee? (Required)",
+              validate: (last_nameInput) => {
+                if (last_nameInput) {
+                  return true;
+                } else {
+                  console.log("Please enter the last name of this employee");
+                  return false;
+                }
+              },
+            },
+            {
+              type: "list",
+              name: "role_id",
+              message: "Which role does this employee belong to?",
+              choices: roleList,
+            },
+            {
+              type: "list",
+              name: "manager_id",
+              message: "Who is the manager for the employee? (Required)",
+              choices: employeeList,
+            },
+          ])
+          .then((answer) => {
+            db.createEmployee(answer).then(() => firstStep());
+          })
+      );
+    });
+  });
 }
+// and that role is added to the database
 
 // // update employee function
 // function updateEmployeeRole() {
