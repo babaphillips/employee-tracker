@@ -1,7 +1,6 @@
 // import npm packages
 const figlet = require("figlet");
 const inquirer = require("inquirer");
-const { findDepts } = require("./db");
 require("console.table");
 
 const db = require("./db");
@@ -179,7 +178,7 @@ function addRole() {
           },
           {
             type: "list",
-            name: "dept",
+            name: "department_id",
             message: "Which department does the role belong to?",
             choices: deptList,
           },
@@ -279,7 +278,7 @@ function updateEmployeeRole() {
           .prompt([
             {
               type: "list",
-              name: "employees",
+              name: "id",
               message: "Which employee do you want to update?",
               choices: employeeList,
             },
@@ -293,7 +292,6 @@ function updateEmployeeRole() {
           .then((answer) => {
             db.updateEmployeeRole(answer).then(() => firstStep());
           })
-        // and that role is added to the database
       );
     });
   });
