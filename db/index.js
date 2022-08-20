@@ -14,7 +14,7 @@ class DB {
     return this.db
       .promise()
       .query(
-        "SELECT role.title, role.id, department.name AS departmentName, role.salary FROM role LEFT JOIN department ON role.department_id = department.id;"
+        "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department ON role.department_id = department.id;"
       );
   }
 
@@ -23,7 +23,7 @@ class DB {
     return this.db
       .promise()
       .query(
-        "SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;"
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;"
       );
   }
 
