@@ -257,84 +257,47 @@ function addEmployee() {
 }
 // and that role is added to the database
 
-// // update employee function
-// function updateEmployeeRole() {
-//   return (
-//     inquirer
-//       //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-//       .prompt([
-//         {
-//           type: "input",
-//           name: "first_name",
-//           message: "What is the first name of this employee? (Required)",
-//           validate: (first_nameInput) => {
-//             if (first_nameInput) {
-//               return true;
-//             } else {
-//               console.log("Please enter the first name of this employee");
-//               return false;
-//             }
-//           },
-//         },
-//         {
-//           type: "input",
-//           name: "last_name",
-//           message: "What is the last name of this employee? (Required)",
-//           validate: (last_nameInput) => {
-//             if (last_nameInput) {
-//               return true;
-//             } else {
-//               console.log("Please enter the last name of this employee");
-//               return false;
-//             }
-//           },
-//         },
-//         {
-//           type: "input",
-//           name: "role",
-//           message: "What is the role of the employee? (Required)",
-//           validate: (roleInput) => {
-//             if (roleInput) {
-//               return true;
-//             } else {
-//               console.log("Please enter the role of the employee");
-//               return false;
-//             }
-//           },
-//         },
-//         {
-//           type: "input",
-//           name: "manager",
-//           message: "What is the manager ID for the employee? (Required)",
-//           validate: (managerInput) => {
-//             if (managerInput) {
-//               return true;
-//             } else {
-//               console.log("Please enter the role of the employee");
-//               return false;
-//             }
-//           },
-//         },
-//       ])
-//       // and that role is added to the database
-//       .then((answer) => {
-//         // not using the const sql here - trying a different method
-//         db.query(
-//           "INSERT INTO employee SET ?",
-//           {
-//             first_name: answer.first_name,
-//             last_name: answer.last_name,
-//             role_id: answer.role,
-//             manager_id: answer.manager,
-//           },
-//           (err) => {
-//             if (err) throw err;
-//             console.log("New role was added into The Office Database");
-//           }
-//         );
-//       })
-//   );
-// }
+// update employee function
+function updateEmployeeRole() {
+  db.findEmployees().then(([table]) => {
+    let employee = table;
+    const employeeList = employee.map(
+      ({ first_name, last_name, title, id }) => ({
+        name: `${first_name} ${last_name} - ${title}`,
+        value: id,
+      })
+    );
+    db.findRoles().then(([table]) => {
+      let role = table;
+      const roleList = role.map(({ id, title }) => ({
+        name: `${title}`,
+        value: id,
+      }));
+      return (
+        inquirer
+          //THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+          .prompt([
+            {
+              type: "list",
+              name: "employees",
+              message: "Which employee do you want to update?",
+              choices: employeeList,
+            },
+            {
+              type: "list",
+              name: "role_id",
+              message: "Which role does this employee belong to?",
+              choices: roleList,
+            },
+          ])
+          .then((answer) => {
+            db.updateEmployeeRole(answer).then(() => firstStep());
+          })
+        // and that role is added to the database
+      );
+    });
+  });
+}
 
 // Create a function to initialize app
 init();
