@@ -54,11 +54,11 @@ In this weekly module we need to build a command-line application from scratch t
 
 ## Usage
 
-This project can be used by individuals, groups of people or even companies to have a server where you can add and retrieves notes data from a JSON file.
+This project can be used by companies to have a server with a database about their employees.
 
 ## Walkthrough
 
-
+[Youtube](https://youtu.be/UeP08JMjizY)
 
 ## License
 
